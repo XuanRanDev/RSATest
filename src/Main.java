@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         getKeyPair();
         //加密字符串
-        String message = "df723820";
+        String message = "XuanRan + Token = 111111";
         System.out.println("随机生成的公钥为:" + hashMap.get(0));
         System.out.println("随机生成的私钥为:" + hashMap.get(1));
         String messageEn = encodedFromRSA(message,hashMap.get(0));
@@ -54,7 +54,7 @@ public class Main {
     }
 
     /**
-     * RSA私钥解密
+     * RSA私钥验签
      *
      * @param str
      *            加密字符串
