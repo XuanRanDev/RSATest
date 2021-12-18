@@ -1,80 +1,58 @@
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.sound.sampled.Clip;
-import java.io.UnsupportedEncodingException;
-import java.security.*;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created By XuanRan on 2021/12/6
+ * Created By XuanRan on 2021/12/18
  */
 public class Main {
+    static String publicKey;
+    static String privateKey;
 
-    public static HashMap<Integer,String> hashMap = new HashMap<>();
+    static {
+        try {
+            Map<String, Object> keyMap = RSAUtils.genKeyPair();
+/*            publicKey = RSAUtils.getPublicKey(keyMap);
+            privateKey = RSAUtils.getPrivateKey(keyMap);*/
+            publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPWX0aejCipBOxFMyqV/oA/ibkcibeMIzwbuDmQwBtfeSeYYon3FYWlGmfb7cR+J9MGPbf2uK+OCl2EZ5sz2Ch5z8i47BMl9ruun/Qt4ZRc0QGaYKG6APQ3K9Jbfx1u8EgFD3QLoTMzuXBGPyUIefeq9DfhaEYuQc4uPk3NrZ2+wIDAQAB";
+            privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAI9ZfRp6MKKkE7EUzKpX+gD+JuRyJt4wjPBu4OZDAG195J5hiifcVhaUaZ9vtxH4n0wY9t/a4r44KXYRnmzPYKHnPyLjsEyX2u66f9C3hlFzRAZpgoboA9Dcr0lt/HW7wSAUPdAuhMzO5cEY/JQh596r0N+FoRi5Bzi4+Tc2tnb7AgMBAAECgYAkSHZN2VeuEvGZBLa49wOkdK/LaslDu+4wfSAXqCXXkOHo5K9fX3m6xV3mqRQhTFilnjv+dRynIPf9loAO8n52m0XMv4BmyXiHV26srWPnlt8QPjyHK76BS92PBlNUaN8WEqDUOwH7imjeIC7XwIlgQcq0s1Jzhs8gH9trAbYDYQJBAMk0AybrcBYdZR5NETqZDb4ZLWr/zAFGBcsVALR/32O9qfi7/2oL6jHVZPFQOp2FOfjVzxDSRVswuDZjMdW2aCcCQQC2Y+SzvQxCC05421Wt7rsdc9PpgpW8HvE+b/QXttHJuwFJBSK/zuY/56u14ysLAQinsyumBVorHZI+IguYqosNAkBHCdEvFaNee4RvPWCe4tkiTDtn8uaxcGqtOD4mfJt/2MBBbQcSByDp9WENfnkjkp1USREx7DvGpZ30vfMjdKKzAkEAlvQMWBpyJ8M12l8mBYOdiB3SWOSESyOM5PFBo9LixMSqpqXCgd+av29dtXdjq4Lah/mJeanaW+7ol9YTpPIZjQJBALybi6jyuK2Cs7gIRJMCeuZEb8iBAxRFPk0oIHF20ExPtU8XzRLNfXLtF+hjAXjUsO2oRow/eayKMnZxyGde3ME=";
+            System.err.println("公钥: \n\r" + publicKey);
+            System.err.println("私钥： \n\r" + privateKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void main(String[] args) throws Exception {
-        getKeyPair();
-        //加密字符串
-        String message = "XuanRan + Token = 111111";
-        System.out.println("随机生成的公钥为:" + hashMap.get(0));
-        System.out.println("随机生成的私钥为:" + hashMap.get(1));
-        String messageEn = encodedFromRSA(message,hashMap.get(0));
-        System.out.println(message + "\t加密后的字符串为:" + messageEn);
-        String messageDe = decrypt(messageEn,hashMap.get(1));
-        System.out.println("还原后的字符串为:" + messageDe);
+        test();
+        testSign();
     }
 
-    private static void getKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048,new SecureRandom());
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
-        String publicKey = Base64.getEncoder().encodeToString(rsaPublicKey.getEncoded());
-        String privateKey = Base64.getEncoder().encodeToString(rsaPrivateKey.getEncoded());
-        hashMap.put(0,publicKey);
-        hashMap.put(1,privateKey);
+    static void test() throws Exception {
+        System.err.println("公钥加密——私钥解密");
+        String source = "这是一行没有任何意义的文字，你看完了等于没看，不是吗？";
+        System.out.println("\r加密前文字：\r\n" + source);
+        byte[] data = source.getBytes();
+        byte[] encodedData = RSAUtils.encryptByPublicKey(data, publicKey);
+        System.out.println("加密后文字：\r\n" + new String(encodedData));
+        byte[] decodedData = RSAUtils.decryptByPrivateKey(encodedData, privateKey);
+        String target = new String(decodedData);
+        System.out.println("解密后文字: \r\n" + target);
     }
 
-    private static String encodedFromRSA(String info,String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
-        byte[] decoded = Base64.getDecoder().decode(publicKey);
-        RSAPublicKey publicKey1 = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decoded));
-        //RSA加密
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
-        String outStr = Base64.getEncoder().encodeToString(cipher.doFinal(info.getBytes("UTF-8")));
-        return outStr;
+    static void testSign() throws Exception {
+        System.err.println("私钥加密——公钥解密");
+        String source = "这是一行测试RSA数字签名的无意义文字";
+        System.out.println("原文字：\r\n" + source);
+        byte[] data = source.getBytes();
+        byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
+        System.out.println("加密后：\r\n" + new String(encodedData));
+        byte[] decodedData = RSAUtils.decryptByPublicKey(encodedData, publicKey);
+        String target = new String(decodedData);
+        System.out.println("解密后: \r\n" + target);
+        System.err.println("私钥签名——公钥验证签名");
+        String sign = RSAUtils.sign(encodedData, privateKey);
+        System.err.println("签名:\r" + sign);
+        boolean status = RSAUtils.verify(encodedData, publicKey, sign);
+        System.err.println("验证结果:\r" + status);
     }
-
-    /**
-     * RSA私钥验签
-     *
-     * @param str
-     *            加密字符串
-     * @param privateKey
-     *            私钥
-     * @return 铭文
-     * @throws Exception
-     *             解密过程中的异常信息
-     */
-    public static String decrypt(String str, String privateKey) throws Exception{
-        //64位解码加密后的字符串
-        byte[] inputByte = Base64.getDecoder().decode(str.getBytes("UTF-8"));
-        //base64编码的私钥
-        byte[] decoded = Base64.getDecoder().decode(privateKey);
-        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decoded));
-        //RSA解密
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, priKey);
-        String outStr = new String(cipher.doFinal(inputByte));
-        return outStr;
-    }
-
 }
