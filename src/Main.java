@@ -10,10 +10,12 @@ public class Main {
     static {
         try {
             Map<String, Object> keyMap = RSAUtils.genKeyPair();
-/*            publicKey = RSAUtils.getPublicKey(keyMap);
-            privateKey = RSAUtils.getPrivateKey(keyMap);*/
-            publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPWX0aejCipBOxFMyqV/oA/ibkcibeMIzwbuDmQwBtfeSeYYon3FYWlGmfb7cR+J9MGPbf2uK+OCl2EZ5sz2Ch5z8i47BMl9ruun/Qt4ZRc0QGaYKG6APQ3K9Jbfx1u8EgFD3QLoTMzuXBGPyUIefeq9DfhaEYuQc4uPk3NrZ2+wIDAQAB";
-            privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAI9ZfRp6MKKkE7EUzKpX+gD+JuRyJt4wjPBu4OZDAG195J5hiifcVhaUaZ9vtxH4n0wY9t/a4r44KXYRnmzPYKHnPyLjsEyX2u66f9C3hlFzRAZpgoboA9Dcr0lt/HW7wSAUPdAuhMzO5cEY/JQh596r0N+FoRi5Bzi4+Tc2tnb7AgMBAAECgYAkSHZN2VeuEvGZBLa49wOkdK/LaslDu+4wfSAXqCXXkOHo5K9fX3m6xV3mqRQhTFilnjv+dRynIPf9loAO8n52m0XMv4BmyXiHV26srWPnlt8QPjyHK76BS92PBlNUaN8WEqDUOwH7imjeIC7XwIlgQcq0s1Jzhs8gH9trAbYDYQJBAMk0AybrcBYdZR5NETqZDb4ZLWr/zAFGBcsVALR/32O9qfi7/2oL6jHVZPFQOp2FOfjVzxDSRVswuDZjMdW2aCcCQQC2Y+SzvQxCC05421Wt7rsdc9PpgpW8HvE+b/QXttHJuwFJBSK/zuY/56u14ysLAQinsyumBVorHZI+IguYqosNAkBHCdEvFaNee4RvPWCe4tkiTDtn8uaxcGqtOD4mfJt/2MBBbQcSByDp9WENfnkjkp1USREx7DvGpZ30vfMjdKKzAkEAlvQMWBpyJ8M12l8mBYOdiB3SWOSESyOM5PFBo9LixMSqpqXCgd+av29dtXdjq4Lah/mJeanaW+7ol9YTpPIZjQJBALybi6jyuK2Cs7gIRJMCeuZEb8iBAxRFPk0oIHF20ExPtU8XzRLNfXLtF+hjAXjUsO2oRow/eayKMnZxyGde3ME=";
+            publicKey = RSAUtils.getPublicKey(keyMap);
+            privateKey = RSAUtils.getPrivateKey(keyMap);
+            FileUtil.WriteText("E:\\桌面文件夹\\服务器\\接口\\TestApi的RSA证书\\private.key",privateKey);
+            FileUtil.WriteText("E:\\桌面文件夹\\服务器\\接口\\TestApi的RSA证书\\public.pem",publicKey);
+           // publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPWX0aejCipBOxFMyqV/oA/ibkcibeMIzwbuDmQwBtfeSeYYon3FYWlGmfb7cR+J9MGPbf2uK+OCl2EZ5sz2Ch5z8i47BMl9ruun/Qt4ZRc0QGaYKG6APQ3K9Jbfx1u8EgFD3QLoTMzuXBGPyUIefeq9DfhaEYuQc4uPk3NrZ2+wIDAQAB";
+          //  privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAI9ZfRp6MKKkE7EUzKpX+gD+JuRyJt4wjPBu4OZDAG195J5hiifcVhaUaZ9vtxH4n0wY9t/a4r44KXYRnmzPYKHnPyLjsEyX2u66f9C3hlFzRAZpgoboA9Dcr0lt/HW7wSAUPdAuhMzO5cEY/JQh596r0N+FoRi5Bzi4+Tc2tnb7AgMBAAECgYAkSHZN2VeuEvGZBLa49wOkdK/LaslDu+4wfSAXqCXXkOHo5K9fX3m6xV3mqRQhTFilnjv+dRynIPf9loAO8n52m0XMv4BmyXiHV26srWPnlt8QPjyHK76BS92PBlNUaN8WEqDUOwH7imjeIC7XwIlgQcq0s1Jzhs8gH9trAbYDYQJBAMk0AybrcBYdZR5NETqZDb4ZLWr/zAFGBcsVALR/32O9qfi7/2oL6jHVZPFQOp2FOfjVzxDSRVswuDZjMdW2aCcCQQC2Y+SzvQxCC05421Wt7rsdc9PpgpW8HvE+b/QXttHJuwFJBSK/zuY/56u14ysLAQinsyumBVorHZI+IguYqosNAkBHCdEvFaNee4RvPWCe4tkiTDtn8uaxcGqtOD4mfJt/2MBBbQcSByDp9WENfnkjkp1USREx7DvGpZ30vfMjdKKzAkEAlvQMWBpyJ8M12l8mBYOdiB3SWOSESyOM5PFBo9LixMSqpqXCgd+av29dtXdjq4Lah/mJeanaW+7ol9YTpPIZjQJBALybi6jyuK2Cs7gIRJMCeuZEb8iBAxRFPk0oIHF20ExPtU8XzRLNfXLtF+hjAXjUsO2oRow/eayKMnZxyGde3ME=";
             System.err.println("公钥: \n\r" + publicKey);
             System.err.println("私钥： \n\r" + privateKey);
         } catch (Exception e) {
